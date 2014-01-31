@@ -19,12 +19,15 @@ function getCursorPoint(e) {
     return pt.matrixTransform(svg.getElementById('inputs').getScreenCTM().inverse());
 }
 
+var TIME = 1500;
+var RATE = 0.25;
 var current = -1;
 var bias = 0;
 var wx = 0;
 var wy = 0;
 var inputs = [];
-var rate = 0.25;
+
+document.getElementById('plane').style.WebkitTransition = '-webkit-transform ' + TIME / 3 + 'ms ease-in-out';
 svg.onmousedown = function (e) {
 	var pt = getCursorPoint(e);
 	addInput(pt.x, pt.y, e.button != 2);
@@ -33,10 +36,11 @@ svg.onmousedown = function (e) {
 
 var rwx = Math.random() - 0.5;
 var rwy = Math.random() - 0.5;
+var bias = Math.random() - 0.5;
 for (var i = 0; i < 60; i++) {
 	var x = 2 * (Math.random() - 0.5) * 450;
 	var y = 2 * (Math.random() - 0.5) * 300;
-	addInput(x, y, rwx * x + rwy * y > 0);
+	addInput(x, y, rwx * x + rwy * y > bias * 100);
 }
 
 function addInput(x, y, desired) {
@@ -58,7 +62,7 @@ function addInput(x, y, desired) {
 
 (function train() {
 	if (!inputs.length) {
-		setTimeout(train, 750);
+		setTimeout(train, TIME / 2);
 		return;
 	}
 		
@@ -75,9 +79,9 @@ function addInput(x, y, desired) {
 		document.getElementById('band').setAttribute('x2', input.x);
 		document.getElementById('band').setAttribute('y2', input.y);
 		
-		bias += rate * (input.desired - result);
-		wx += rate * (input.desired - result) * input.x;
-		wy += rate * (input.desired - result) * input.y;
+		bias += RATE * (input.desired - result) * 100;
+		wx += RATE * (input.desired - result) * input.x;
+		wy += RATE * (input.desired - result) * input.y;
 		
 		setTimeout(function () {
 			input.el.style.filter = '';
@@ -88,14 +92,14 @@ function addInput(x, y, desired) {
 		
 			// Update the plane.
 			var length = Math.sqrt(wx * wx + wy * wy);
-			document.getElementById('plane').style.WebkitTransform = 'rotate(' + Math.atan2(wy, wx) + 'rad) translateY(' + -bias / wy + 'px)';
+			document.getElementById('plane').style.WebkitTransform = 'rotate(' + Math.atan2(wy, wx) + 'rad)';
 			document.getElementById('normal').setAttribute('x2', length);
 			document.getElementById('arrowhead').setAttribute('points', (length-15) + ',7 ' + length + ',0 ' + (length-15)+',-7');
-		}, 500);
+		}, TIME / 3);
 		
-		setTimeout(train, 1500);
+		setTimeout(train, TIME);
 	}
 	
 	else
-		setTimeout(train, 50);
+		setTimeout(train, TIME / 30);
 }());
