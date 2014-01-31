@@ -27,13 +27,20 @@ var wx = 0;
 var wy = 0;
 var inputs = [];
 
-document.getElementById('plane').style.WebkitTransition = '-webkit-transform ' + TIME / 3 + 'ms ease-in-out';
+setInterval(function () {
+	if (TIME > 50) {
+		TIME *= 0.9;
+		document.getElementById('plane').style.WebkitTransition = '-webkit-transform ' + TIME / 3 + 'ms ease-in-out';
+	}
+}, 1000);
+
 svg.onmousedown = function (e) {
 	var pt = getCursorPoint(e);
 	addInput(pt.x, pt.y, e.button != 2);
 	return false;
 };
 
+/*
 var rwx = Math.random() - 0.5;
 var rwy = Math.random() - 0.5;
 var bias = Math.random() - 0.5;
@@ -42,7 +49,7 @@ for (var i = 0; i < 60; i++) {
 	var y = 2 * (Math.random() - 0.5) * 300;
 	addInput(x, y, rwx * x + rwy * y > bias * 100);
 }
-
+*/
 function addInput(x, y, desired) {
 	var el = createSvgElement('use', {
 		'x': x,
