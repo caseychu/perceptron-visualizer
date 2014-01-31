@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Perceptron Visualizer</title>
+	</head>
+	<body>
+		<svg width="900" height="600" style="border: 1px solid black">
+			<defs>
+				<g id="input1" style="stroke: #f00; stroke-width: 2px; cursor: pointer">
+					<line x1="-5" y1="-5" x2="5" y2="5" />
+					<line x1="-5" y1="5" x2="5" y2="-5" />
+				</g>
+				
+				<g id="input2" style="stroke: #0f0; stroke-width: 2px">
+					<line x1="-5" y1="-5" x2="5" y2="5" />
+					<line x1="-5" y1="5" x2="5" y2="-5" />
+				</g>
+					
+				<filter id="selected" x="-70%" y="-70%" width="200%" height="200%">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blurred" />
+					<feBlend in="SourceGraphic" in2="blurred" mode="normal" />
+				</filter>
+			</defs>
+			
+			<g transform="translate(450, 300) scale(1 -1)">
+				<!-- the axes -->
+				<g style="stroke: #ccc">
+					<line x1="-1000" x2="1000" y1="0" y2="0" />
+					<line x1="0" x2="0" y1="-1000" y2="1000" />
+				</g>
+				
+				<g id="separation" transform="rotate(45)" style="stroke: #00f; fill: #00f; stroke-width: 2px">
+					<!-- the plane -->
+					<line x1="0" x2="0" y1="-1000" y2="1000" style="stroke-width: 3px" />
+					
+					<!-- normal vector -->
+					<line x1="0" y1="0" x2="100" y2="0" />
+					<polygon points="78,10 100,0 78,-10" />
+				</g>
+				
+				<g id="inputs">
+					<use x="100" y="100" xlink:href="#input1" style="filter: url(#selected)" />
+					<use x="100" y="120" xlink:href="#input2" style="filter: url(#selected);" />
+				</g>
+			</g>
+		</svg>
+	</body>
+</html>
